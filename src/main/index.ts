@@ -7,7 +7,14 @@ function createWindow(): void {
     height: 1200,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {})
+    frame: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    type: 'toolbar', // Linux X11 window type - sets WM_WINDOW_ROLE
+    icon,
+    webPreferences: {
+      contextIsolation: true
+    }
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -27,7 +34,5 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  app.quit()
 })
