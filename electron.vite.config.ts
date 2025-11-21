@@ -1,4 +1,5 @@
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import { resolve } from 'path'
 
 export default defineConfig({
   main: {
@@ -10,7 +11,9 @@ export default defineConfig({
   renderer: {
     build: {
       rollupOptions: {
-        input: {}
+        input: {
+          index: resolve(__dirname, 'src/renderer/index.html')
+        }
       }
     }
   }
