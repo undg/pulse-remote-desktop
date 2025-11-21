@@ -1,16 +1,22 @@
 import { app, BrowserWindow } from 'electron'
 import icon from '../../resources/icon.png?asset'
 
+// Set the app name explicitly (used for WM_CLASS on Linux)
+app.setName('pulse-remote-electron')
+
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 1200,
     show: false,
     autoHideMenuBar: true,
-    frame: false,
+    frame: true,
     alwaysOnTop: true,
     skipTaskbar: true,
-    type: 'toolbar', // Linux X11 window type - sets WM_WINDOW_ROLE
+    type: 'toolbar', // X11: sets WM_WINDOW_ROLE, helps tiling WMs float the window
+    resizable: true,
+    minimizable: true,
+    maximizable: true,
     icon,
     webPreferences: {
       contextIsolation: true
