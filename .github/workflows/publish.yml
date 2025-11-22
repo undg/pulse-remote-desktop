@@ -11,20 +11,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
       - name: build
         run: |
           pnpm install
           pnpm run build:linux
           mkdir pulse-remote-desktop
-          mv dist/pulse-remote-desktop* pulse-remote-desktop
+          cp dist/pulse-remote-desktop* pulse-remote-desktop
           zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            ./autorotate-${{ github.ref_name }}.zip
-            ./autorotate
+            ./pulse-remote-desktop-${{ github.ref_name }}.zip
+            ./dist/pulse-remote-desktop
