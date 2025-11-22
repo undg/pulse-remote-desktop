@@ -2,6 +2,23 @@ const fs = require('fs')
 const path = require('path')
 
 exports.default = async function afterPack(context) {
+  removeLocale(context)
+  copyAppImage(context)
+}
+
+function copyAppImage(context) {
+  const outDir = context.outDir
+  const name = context.packager.appInfo.name
+  const version = context.packager.appInfo.version
+  const ext = 'AppImage'
+
+  const srcFilePath = path.join(outDir, `${name}-${version}.${ext}`)
+  const destFilePath = path.join(outDir, name)
+
+  fs.copyFileSync(srcFilePath, destFilePath)
+}
+
+function removeLocale(context) {
   const localesPath = path.join(context.appOutDir, 'locales')
 
   if (!fs.existsSync(localesPath)) {
