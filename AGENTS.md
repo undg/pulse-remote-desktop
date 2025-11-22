@@ -13,9 +13,9 @@
 
 ## Code Style
 
-- **Formatting**: Single quotes, no semicolons, 100 char line width, trailing commas (see `.prettierrc.yaml`)
+- **Formatting**: Double quotes, no semicolons, 100 char line width, trailing commas (see `.prettierrc.yaml`)
 - **Indentation**: 2 spaces (enforced by `.editorconfig`)
-- **TypeScript**: Strict type checking enabled, use explicit return types for functions
+- **TypeScript**: Strict type checking enabled, use implicit return types for functions
 - **Imports**: Group by external deps, then internal modules; use ES6 imports
 - **Error Handling**: Use try-catch blocks, log errors to console (see `src/preload/index.ts:15`)
 - **Naming**: camelCase for variables/functions, PascalCase for classes/types
