@@ -1,10 +1,10 @@
 {
-  "name": "pulse-remote",
+  "name": "pulse-remote-desktop",
   "version": "1.0.1",
-  "description": "A minimal Electron application with TypeScript",
+  "description": "Frontend desktop app for pulse-remote",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "undg",
+  "homepage": "https://github.com/undg/pulse-remote-desktop",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
