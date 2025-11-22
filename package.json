@@ -34,5 +34,8 @@
     "prettier": "3.6.2",
     "typescript": "5.9.2",
     "vite": "7.1.6"
+  },
+  "overrides": {
+    "app-builder-bin": "4.0.0"
   }
 }
