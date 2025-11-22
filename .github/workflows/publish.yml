@@ -3,7 +3,7 @@ name: release
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   build_release:
@@ -21,8 +21,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -30,8 +30,8 @@ jobs:
           sudo snap install snapcraft --classic
       - name: build
         run: |
-          pnpm install
-          pnpm run build:linux
+          npm install
+          npm run build:linux
           mkdir pulse-remote-desktop
           cp dist/pulse-remote-desktop* pulse-remote-desktop
           zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
