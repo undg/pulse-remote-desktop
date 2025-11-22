@@ -1,0 +1,30 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build_release:
+    name: build_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: build
+        run: |
+          pnpm install
+          pnpm run build:linux
+          mkdir pulse-remote-desktop
+          mv dist/pulse-remote-desktop* pulse-remote-desktop
+          zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./autorotate-${{ github.ref_name }}.zip
+            ./autorotate
