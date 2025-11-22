@@ -24,13 +24,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rpm
           sudo snap install snapcraft --classic
-      - name: build
+      - name: Build app and create artifacts
         run: |
           npm install
           npm run build:linux
           mkdir pulse-remote-desktop
           cp dist/pulse-remote-desktop* pulse-remote-desktop
           zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
         uses: softprops/action-gh-release@v2
