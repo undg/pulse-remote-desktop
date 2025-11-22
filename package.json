@@ -28,14 +28,11 @@
     "@electron-toolkit/tsconfig": "2.0.0",
     "@types/node": "22.18.6",
     "electron": "38.1.2",
-    "electron-builder": "25.1.8",
+    "electron-builder": "26.3.0",
     "electron-vite": "4.0.1",
     "eslint": "9.36.0",
     "prettier": "3.6.2",
     "typescript": "5.9.2",
     "vite": "7.1.6"
-  },
-  "overrides": {
-    "app-builder-bin": "4.0.0"
   }
 }
