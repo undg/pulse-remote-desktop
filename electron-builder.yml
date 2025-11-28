@@ -16,6 +16,8 @@ linux:
   target:
     - AppImage
     - deb
+    - pacman
+    - rpm
   maintainer: electronjs.org
   category: Utility
 appImage:

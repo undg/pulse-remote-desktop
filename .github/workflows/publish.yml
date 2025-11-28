@@ -30,9 +30,9 @@ jobs:
         run: |
           npm install
           npm run build:linux
-          mkdir pulse-remote-desktop
+          # mkdir pulse-remote-desktop
           cp dist/pulse-remote-desktop* pulse-remote-desktop
-          zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
+          # zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,5 +40,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ./pulse-remote-desktop-${{ github.ref_name }}.zip
+            # ./pulse-remote-desktop-${{ github.ref_name }}.zip
             ./dist/pulse-remote-desktop
+            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.deb
+            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.rpm
+            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.AppImage
+            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.pkg.tar.zst
