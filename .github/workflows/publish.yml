@@ -34,6 +34,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum pulse-remote-desktop pulse-remote-desktop.AppImage *.deb *.rpm > SHA256SUMS
+          mv SHA256SUMS ..
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
@@ -42,3 +48,4 @@ jobs:
             ./dist/pulse-remote-desktop.AppImage
             ./dist/*.deb
             ./dist/*.rpm
+            ./SHA256SUMS
