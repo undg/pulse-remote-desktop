@@ -24,15 +24,12 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm
-          sudo snap install snapcraft --classic
+          sudo apt-get install -y rpm libarchive-tools
       - name: Build app and create artifacts
         run: |
           npm install
           npm run build:linux
-          # mkdir pulse-remote-desktop
-          cp dist/pulse-remote-desktop* pulse-remote-desktop
-          # zip -r "pulse-remote-desktop-$GITHUB_REF_NAME.zip" pulse-remote-desktop
+          cp dist/*.AppImage "dist/pulse-remote-desktop.AppImage"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,9 +37,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            # ./pulse-remote-desktop-${{ github.ref_name }}.zip
-            ./dist/pulse-remote-desktop
-            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.deb
-            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.rpm
-            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.AppImage
-            ./dist/dist/pulse-remote-desktop-${{ github.ref_name }}.pkg.tar.zst
+            ./dist/pulse-remote-desktop.AppImage
+            ./dist/*.deb
+            ./dist/*.rpm
+            ./dist/*.pacman
