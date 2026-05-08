@@ -30,7 +30,6 @@ jobs:
           npm install
           npm run build:linux
           cp dist/*.AppImage "dist/pulse-remote-desktop"
-          cp dist/*.AppImage "dist/pulse-remote-desktop.AppImage"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -45,7 +44,6 @@ jobs:
         with:
           files: |
             ./dist/pulse-remote-desktop
-            ./dist/pulse-remote-desktop.AppImage
             ./dist/*.deb
             ./dist/*.rpm
             ./SHA256SUMS
