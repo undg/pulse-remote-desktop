@@ -1,100 +1,69 @@
 # pulse-remote-desktop
 
-Electron desktop wrapper for [pulse-remote-web](https://github.com/undg/pulse-remote-web) - a WebSocket-based remote PulseAudio/PipeWire controller for Linux systems.
+Control your Linux PC's audio from a dedicated desktop window.
 
-## What is this?
-
-This Electron app wraps the [pulse-remote-web](https://github.com/undg/pulse-remote-web) frontend in a native desktop window, providing a dedicated interface to control your Linux PC's audio remotely. It connects to the [pulse-remote](https://github.com/undg/pulse-remote) WebSocket server running on your Linux machine (default: `http://localhost:8448`).
+Electron wrapper for [pulse-remote-web](https://github.com/undg/pulse-remote-web) — a remote audio controller for PulseAudio/PipeWire.
 
 ## Features
 
-- **Standalone Desktop App**: Native Electron window for the web interface
-- **Always on Top**: Configured as a floating toolbar window (useful for tiling window managers)
-- **Auto-hide Menu**: Clean, distraction-free interface
-- **Skip Taskbar**: Appears as a utility window
-- **Optimized for Linux**: Custom WM_CLASS and window type settings for tiling WMs
+- Standalone floating window for audio control
+- Always on top — works with tiling window managers
+- Skips taskbar — stays out of your way
+- Clean, menu-free interface
 
-## Architecture
+## Quick Start
 
-```
-┌─────────────────────────┐
-│  pulse-remote-desktop   │  ← This repo (Electron wrapper)
-│   (Electron App)        │
-└───────────┬─────────────┘
-            │ WebSocket
-            ↓
-┌─────────────────────────┐
-│   pulse-remote          │  ← Backend server (Go/WebSocket)
-│   (localhost:8448)      │     https://github.com/undg/pulse-remote
-└───────────┬─────────────┘
-            │ PulseAudio API
-            ↓
-┌─────────────────────────┐
-│  PulseAudio/PipeWire    │  ← Linux audio system
-└─────────────────────────┘
-```
+### 1. Set up the backend
 
-## Prerequisites
-
-You need the [pulse-remote](https://github.com/undg/pulse-remote) server running on your Linux machine:
+Download [pulse-remote](https://github.com/undg/pulse-remote/releases/latest) for your architecture:
 
 ```bash
-git clone https://github.com/undg/pulse-remote
-cd pulse-remote
-make run
+# Extract and run
+tar xzf pulse-remote_*_Linux_x86_64.tar.gz
+./pulse-remote
 ```
 
-The server will start on `ws://localhost:8448/api/v1/ws`
+Server starts on `ws://localhost:8448/api/v1/ws`
 
-## Installation
-
-### Install Dependencies
+Arch users can install from AUR:
 
 ```bash
-pnpm install
+yay -S pulse-remote-git
 ```
 
-### Development
+### 2. Install the desktop app
+
+Download from [releases](https://github.com/undg/pulse-remote-desktop/releases/latest):
+
+| Format        | File                              |
+| ------------- | --------------------------------- |
+| AppImage      | `pulse-remote-desktop-*.AppImage`   |
+| Debian/Ubuntu | `pulse-remote-desktop_*_amd64.deb`  |
+| RHEL/Fedora   | `pulse-remote-desktop-*.x86_64.rpm` |
+
+Arch users can install from AUR:
 
 ```bash
-pnpm run dev
+yay -S pulse-remote-desktop
 ```
 
-### Build
+### 3. Run
 
-```bash
-# Type check and build for production
-pnpm run build
-
-# Build and package for Linux
-pnpm run build:linux
-
-# Build unpacked (for testing)
-pnpm run build:unpack
-```
+Launch the app — it connects to the backend automatically.
 
 ## Configuration
 
-The app is configured to:
+The app connects to `http://localhost:8448` by default and runs as a 900×1200 floating toolbar window.
 
-- Load the web UI from `http://localhost:8448`
-- Display as a 900x1200 floating toolbar window
-- Stay always on top and skip the taskbar
-- Use custom WM_CLASS: `pulse-remote-electron`
+To change the server URL, window size, or behavior, edit `src/main/index.ts` and rebuild. See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions.
 
-Edit `src/main/index.ts` to customize window behavior and server URL.
+> **Note:** User-friendly configuration (settings file/CLI flags) is planned for a future release.
 
 ## Related Projects
 
-- **[pulse-remote](https://github.com/undg/pulse-remote)**: Go backend WebSocket server that communicates with PulseAudio/PipeWire
-- **[pulse-remote-web](https://github.com/undg/pulse-remote-web)**: React/TypeScript web frontend (loaded by this app)
-
-## Development Stack
-
-- **Electron**: Native desktop wrapper
-- **TypeScript**: Type-safe development
-- **Vite**: Fast build tooling via electron-vite
-- **ESLint + Prettier**: Code quality and formatting
+- [pulse-remote](https://github.com/undg/pulse-remote) — Go backend (WebSocket ↔ PulseAudio/PipeWire)
+- [pulse-remote-web](https://github.com/undg/pulse-remote-web) — React frontend (loaded by this app)
+- [pulse-remote-mobile](https://github.com/undg/pulse-remote-mobile) — Mobile client
 
 ## License
 
