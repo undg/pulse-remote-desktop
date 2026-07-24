@@ -8,7 +8,7 @@ app.commandLine.appendSwitch('disable-software-rasterizer')
 Menu.setApplicationMenu(null)
 
 // Set the app name explicitly (used for WM_CLASS on Linux)
-app.setName('pulse-remote-electron')
+app.setName('pulse-remote-desktop')
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
