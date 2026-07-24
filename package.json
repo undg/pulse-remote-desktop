@@ -18,7 +18,7 @@
     "bump:minor": "npm version minor",
     "bump:major": "npm version major",
     "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
+    "build:unpacked": "npm run build && electron-builder --dir",
     "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
