@@ -1,25 +1,45 @@
-import { app, BrowserWindow } from 'electron'
-import icon from '../../resources/icon.png?asset'
-import { Menu } from 'electron/main'
+import { app, BrowserWindow, Tray, Menu, nativeImage } from "electron"
+import icon from "../../resources/icon.png?asset"
 
-// Performance optimizations - disable font preloading and unnecessary rendering features
-app.commandLine.appendSwitch('disable-font-subpixel-positioning')
-app.commandLine.appendSwitch('disable-software-rasterizer')
+// ── Performance ────────────────────────────────────────────────
+app.commandLine.appendSwitch("disable-font-subpixel-positioning")
+app.commandLine.appendSwitch("disable-software-rasterizer")
 Menu.setApplicationMenu(null)
+app.setName("pulse-remote-desktop")
 
-// Set the app name explicitly (used for WM_CLASS on Linux)
-app.setName('pulse-remote-desktop')
+// ── Single-instance toggle ────────────────────────────────────
+// A second launch (e.g. Win+A while already running) triggers
+// the existing instance instead of starting a new process.
+let mainWindow: BrowserWindow | null = null
+let isQuitting = false
 
+const gotLock = app.requestSingleInstanceLock()
+if (!gotLock) {
+  app.quit()
+} else {
+  app.on("second-instance", () => {
+    if (!mainWindow) return
+    if (mainWindow.isVisible()) {
+      mainWindow.hide()
+    } else {
+      mainWindow.show()
+      mainWindow.focus()
+    }
+  })
+}
+
+// ── Window ────────────────────────────────────────────────────
 function createWindow(): void {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 1200,
-    show: true,
+    show: false,
+    backgroundColor: "#0b0a09", // matches --background dark theme (HSL 20 14.3% 4.1%)
     autoHideMenuBar: true,
     frame: true,
     alwaysOnTop: true,
     skipTaskbar: true,
-    type: 'toolbar', // X11: sets WM_WINDOW_ROLE, helps tiling WMs float the window
+    type: "toolbar",
     resizable: true,
     minimizable: true,
     maximizable: true,
@@ -30,24 +50,70 @@ function createWindow(): void {
     },
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+  mainWindow.on("ready-to-show", () => {
+    mainWindow?.show()
   })
 
-  // Load localhost URL with error handling
-  mainWindow.loadURL('http://localhost:8448').catch((err) => {
-    console.error('Failed to load URL:', err)
+  // Hide instead of close — the app stays alive for instant toggle
+  mainWindow.on("close", (event) => {
+    if (!isQuitting) {
+      event.preventDefault()
+      mainWindow?.hide()
+    }
+  })
+
+  mainWindow.loadURL("http://localhost:8448").catch((err) => {
+    console.error("Failed to load URL:", err)
   })
 }
 
+// ── Tray ──────────────────────────────────────────────────────
+function createTray(): void {
+  try {
+    const trayIcon = nativeImage.createFromPath(icon as string).resize({ width: 16, height: 16 })
+    const tray = new Tray(trayIcon)
+    tray.setToolTip("Pulse Remote")
+    tray.setContextMenu(
+      Menu.buildFromTemplate([
+        {
+          label: "Show/Hide",
+          click: () => {
+            if (mainWindow?.isVisible()) {
+              mainWindow?.hide()
+            } else {
+              mainWindow?.show()
+              mainWindow?.focus()
+            }
+          },
+        },
+        { type: "separator" },
+        {
+          label: "Quit",
+          click: () => {
+            isQuitting = true
+            app.quit()
+          },
+        },
+      ]),
+    )
+  } catch {
+    // Tray not available on this DE — app still works via launcher toggle
+  }
+}
+
+// ── App lifecycle ─────────────────────────────────────────────
 app.whenReady().then(() => {
   createWindow()
+  createTray()
 
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  app.on("activate", () => {
+    if (mainWindow) {
+      mainWindow.show()
+      mainWindow.focus()
+    }
   })
 })
 
-app.on('window-all-closed', () => {
-  app.quit()
+app.on("before-quit", () => {
+  isQuitting = true
 })
