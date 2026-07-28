@@ -15,7 +15,10 @@ let isQuitting = false
 
 const gotLock = app.requestSingleInstanceLock()
 if (!gotLock) {
-  app.quit()
+  // app.quit() is async — the event loop keeps running and Electron
+  // initializes enough DBus/SNI internals for the DE to flash a tray icon.
+  // app.exit() terminates immediately without any cleanup.
+  app.exit(0)
 } else {
   app.on("second-instance", () => {
     if (!mainWindow) return
@@ -68,10 +71,13 @@ function createWindow(): void {
 }
 
 // ── Tray ──────────────────────────────────────────────────────
+let tray: Tray | null = null
+
 function createTray(): void {
+  if (tray) return // already created — idempotent
   try {
     const trayIcon = nativeImage.createFromPath(icon as string).resize({ width: 16, height: 16 })
-    const tray = new Tray(trayIcon)
+    tray = new Tray(trayIcon)
     tray.setToolTip("Pulse Remote")
     tray.setContextMenu(
       Menu.buildFromTemplate([
